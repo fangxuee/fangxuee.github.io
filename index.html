@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>fangxuee — Galactic Dev Universe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=JetBrains+Mono:wght@500&family=Nunito:wght@800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      width: 100vw;
+      font-family: 'JetBrains Mono', 'Orbitron', 'Nunito', monospace;
+      background: linear-gradient(135deg, #090c18 0%, #12172a 100%);
+      color: #d6eaff;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    .bg-animated {
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0; pointer-events: none;
+    }
+    .stars { position: absolute; left: 0; top: 0; width: 100vw; height: 100vh; }
+    .shooting-star {
+      position: fixed;
+      width: 2px; height: 80px; border-radius: 1px;
+      background: linear-gradient(180deg, #7dfaff 0%, #a7baff00 90%);
+      opacity: 0.75;
+      filter: blur(0.6px);
+      z-index: 1; pointer-events: none;
+      animation: shoot 2.8s linear infinite;
+    }
+    .shooting-star:nth-child(2) { left:14vw; animation-delay: 0.4s;}
+    .shooting-star:nth-child(3) { left:57vw; animation-delay: 1.2s;}
+    .shooting-star:nth-child(4) { left:79vw; animation-delay: 2.0s;}
+    .shooting-star:nth-child(5) { left:31vw; animation-delay: 1.7s;}
+    @keyframes shoot {
+      0% { top: -80px; opacity: 0; }
+      10% { opacity: 0.8; }
+      80% { opacity: 0.8; }
+      100% { top: 110vh; opacity: 0; }
+    }
+    .container {
+      max-width: 770px;
+      margin: 70px auto 0 auto;
+      background: rgba(16,18,33,0.99);
+      border-radius: 31px;
+      box-shadow: 0 8px 55px #4a2aff13, 0 0 0 #fff0;
+      padding: 2.8rem 1.24rem 2.4rem 1.24rem;
+      text-align: center;
+      border: 2.5px solid #23263a;
+      backdrop-filter: blur(2.5px);
+      z-index: 2;
+      position: relative;
+      overflow: visible;
+    }
+    .neon-divider {
+      width: 85%;
+      max-width: 410px;
+      margin: 2.8em auto 2.5em auto;
+      height: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      position: relative;
+    }
+    .neon-divider .bar {
+      width: 100%;
+      height: 3px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #8ad7fc 0%, #e3aaff 70%, #5ffcff 100%);
+      box-shadow: 0 0 14px #e7aaff80, 0 0 19px #58d6ff44;
+      opacity: 0.99;
+      animation: neon-pulse 3.1s infinite alternate;
+    }
+    .neon-divider .dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff 65%, #8ad7fc 80%, #e3aaff 100%);
+      box-shadow: 0 0 19px #e7aaffee, 0 0 24px #58d6ff99;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+      animation: neon-dot-pulse 2.2s infinite alternate;
+      z-index: 2;
+    }
+    @keyframes neon-pulse {
+      0% { opacity: 0.82; box-shadow: 0 0 9px #8ad7fc44, 0 0 12px #e3aaff22; }
+      100% { opacity: 1; box-shadow: 0 0 32px 8px #e7aaffb0, 0 0 38px #a5f7ff77; }
+    }
+    @keyframes neon-dot-pulse {
+      0% { box-shadow: 0 0 13px #e7aaffcc, 0 0 18px #58d6ff66; }
+      100% { box-shadow: 0 0 32px #e7aaffff, 0 0 43px #a5f7ff99; }
+    }
+    .neon {
+      color: #7dfaff;
+      text-shadow: 0 0 11px #7dfaffbb, 0 0 22px #7dfaff77, 0 0 48px #7dfaff33;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+    }
+    .neon-accent {
+      color: #e3aaff;
+      text-shadow: 0 0 13px #e3aaffcc, 0 0 29px #e3aaff55, 0 0 55px #a5e7ff66;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+    }
+    h1 {
+      font-family: 'Orbitron', 'Nunito', monospace;
+      font-size: 2.45em;
+      margin-top: 0.23em;
+      margin-bottom: 0.17em;
+      color: #7dfaff;
+      text-shadow: 0 0 22px #7dfaff99, 0 0 0 transparent;
+      font-weight: 700;
+      letter-spacing: 3.5px;
+      animation: logo-glow 2.1s infinite alternate;
+    }
+    @keyframes logo-glow {
+      0% { text-shadow: 0 0 12px #7dfaff33; }
+      100% { text-shadow: 0 0 35px #7dfaffcc, 0 0 24px #e3aaffbb; }
+    }
+    .avatar {
+      width: 114px;
+      height: 114px;
+      border-radius: 50%;
+      border: 4px solid #e3aaff;
+      box-shadow: 0 0 32px #7dfaff77;
+      margin: 0 auto 1.2em auto;
+      display: block;
+      background: #fff;
+      object-fit: cover;
+      transition: box-shadow 0.2s;
+      filter: drop-shadow(0 0 20px #e3aaff44);
+      animation: floaty 8s ease-in-out infinite alternate;
+    }
+    @keyframes floaty {
+      0% { transform:translateY(0); }
+      100% { transform:translateY(-15px);}
+    }
+    .avatar:hover {
+      box-shadow: 0 0 55px #e3aaffcc, 0 0 22px #7dfaff99;
+      filter: drop-shadow(0 0 10px #fff9);
+    }
+    .tagline {
+      font-family: 'Nunito', 'JetBrains Mono', monospace;
+      font-size: 1.32em;
+      color: #c2aaff;
+      margin-bottom: 1.65em;
+      text-shadow: 0 0 9px #8ad7fc44;
+      line-height:1.5;
+    }
+    .about-box {
+      background: linear-gradient(110deg,#11172b 60%,#1f1e35 100%);
+      border-radius: 21px;
+      box-shadow: 0 0 16px #e3aaff11,0 0 0 #fff0;
+      color: #e0e6ed;
+      padding: 1.35em 1.2em 1.7em 1.2em;
+      margin: 2.2em auto 2.5em auto;
+      max-width: 520px;
+      text-align: left;
+      border: 2.2px solid #2e2b53;
+      position: relative;
+      z-index: 2;
+    }
+    .about-box h2 {
+      color: #e3aaff;
+      font-family: 'Orbitron', monospace;
+      font-size: 1.21em;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px #e3aaff99, 0 0 2px #fff;
+      margin: 0 0 0.6em 0;
+      text-align: left;
+    }
+    .about-box ul {
+      margin-top: 0.2em;
+      padding-left: 1.35em;
+      font-size: 1.07em;
+    }
+    .about-box li {
+      margin-bottom: 0.37em;
+      line-height: 1.65;
+    }
+    .projects-panel {
+      margin: 2.4em 0 2em 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 32px;
+    }
+    .project-card {
+      background: linear-gradient(120deg, #191f36 70%, #23263a 100%);
+      border-radius: 18px;
+      box-shadow: 0 0 18px #a9e7ff33, 0 0 0 #fff0;
+      padding: 1.18em 1.25em 1.18em 1.25em;
+      min-width: 220px;
+      max-width: 267px;
+      color: #e5e9fc;
+      font-size: 1.13em;
+      text-align: left;
+      border: 1.8px solid #2e3b53;
+      position: relative;
+      z-index: 2;
+      transition: box-shadow .16s, transform .14s;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      overflow: visible;
+    }
+    .project-card:hover {
+      box-shadow: 0 0 33px #e3aaff99, 0 0 0 #fff0;
+      transform: translateY(-6px) scale(1.045);
+    }
+    .project-title {
+      font-family: 'Orbitron', 'JetBrains Mono', monospace;
+      color: #7dfaff;
+      font-size: 1.18em;
+      font-weight: bold;
+      margin-bottom: 0.19em;
+      letter-spacing: 1.5px;
+      text-shadow: 0 0 11px #e3aaff88;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .project-desc {
+      margin: 0.44em 0 0.7em 0;
+      color: #b3c5e2;
+      font-size: 1.01em;
+      line-height:1.5;
+    }
+    .project-link {
+      display: inline-block;
+      background: linear-gradient(90deg, #7dfaff 0%, #e3aaff 100%);
+      color: #23263a;
+      font-family: 'Orbitron', 'JetBrains Mono', monospace;
+      font-size: 1.06em;
+      font-weight: 800;
+      border: none;
+      border-radius: 99px;
+      padding: 0.55em 1.45em;
+      cursor: pointer;
+      letter-spacing: 1.25px;
+      box-shadow: 0 0 9px #7dfaff77, 0 0 7px #e3aaff33;
+      text-shadow: 0 0 7px #fff9, 0 0 2px #fff9;
+      transition: background 0.16s, color 0.15s, transform 0.13s, box-shadow 0.15s;
+      outline: none;
+      margin-right: 0.4em;
+      text-decoration: none;
+      margin-bottom: 4px;
+    }
+    .project-link i {
+      margin-right: 0.5em;
+      filter: drop-shadow(0 0 5px #ffd700cc);
+      font-size: 1.12em;
+      vertical-align: middle;
+    }
+    .project-link:hover {
+      background: linear-gradient(90deg, #e3aaff 0%, #7dfaff 100%);
+      color: #181f33;
+      transform: scale(1.07) translateY(-2px);
+    }
+    .project-icons {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      margin-top: 0.2em;
+      margin-bottom: 0.2em;
+      font-size: 1.3em;
+      color: #ffd700;
+      filter: drop-shadow(0 0 7px #ffd70055);
+    }
+    .main-btns-title {
+      margin-bottom: 0.3em;
+      font-size: 1.13em;
+      color: #e3aaff;
+      letter-spacing: 1.2px;
+      font-family: 'JetBrains Mono', 'Nunito', monospace;
+    }
+    .big-buttons {
+      margin: 2.9em 0 0.7em 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 28px;
+    }
+    .main-btn {
+      display: inline-block;
+      padding: 22px 62px;
+      border-radius: 40px;
+      background: linear-gradient(92deg, #7dfaff 0%, #e3aaff 47%, #5ffcff 100%);
+      color: #191f33;
+      box-shadow: 0 0 44px #e3aaffcc, 0 0 12px #7dfaff99, 0 0 2px #fff;
+      text-shadow: 0 0 18px #fff9, 0 0 2px #fff9;
+      font-family: 'Orbitron', 'JetBrains Mono', monospace, Arial, sans-serif;
+      font-size:1.44rem;
+      font-weight:900;
+      letter-spacing:2px;
+      border:none;
+      cursor:pointer;
+      transition: all .18s cubic-bezier(.6,1.7,.58,.9);
+      text-decoration: none;
+      margin-bottom: 0.22em;
+      position: relative;
+      overflow: hidden;
+    }
+    .main-btn .neon-icon {
+      margin-right: 0.7em;
+      font-size: 1.2em;
+      /* Neon yellow to black gradient icon background */
+      background: linear-gradient(120deg, #ffd700 0%, #ffe56b 45%, #0c0e12 100%);
+      color: #191f33;
+      border-radius: 50%;
+      padding: 7px 10px 7px 10px;
+      filter: drop-shadow(0 0 10px #ffd700cc);
+      vertical-align: middle;
+      box-shadow: 0 0 20px #ffd70044, 0 0 10px #191f33bb inset;
+      border: 2px solid #0c0e12;
+      transition: background 0.26s, color 0.18s, box-shadow 0.18s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .main-btn:hover {
+      transform: scale(1.07) translateY(-3px);
+      box-shadow: 0 0 66px #e3aaff,0 0 24px #7dfaff99;
+      background: linear-gradient(92deg, #e3aaff 0%, #7dfaff 100%, #5ffcff 100%);
+      color: #0d1a2a;
+    }
+    .main-btn:hover .neon-icon {
+      background: linear-gradient(120deg, #0c0e12 20%, #ffd700 80%);
+      color: #ffd700;
+      box-shadow: 0 0 32px #ffd70099, 0 0 14px #0c0e1288 inset;
+      border-color: #ffd700;
+    }
+    .cute-dogs {
+      margin: 1.7em 0 2.2em 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+    }
+    .cute-dogs img {
+      border-radius: 22px;
+      box-shadow: 0 0 24px #e3aaff55, 0 0 5px #7dfaff33;
+      width: 80px;
+      background: #151728;
+      transition: transform 0.13s;
+      animation: doggy-bounce 4s infinite alternate;
+    }
+    .cute-dogs img:hover {
+      transform: scale(1.08) rotate(-7deg);
+      box-shadow: 0 0 50px #e3aaff99, 0 0 24px #ffd700bb;
+      background: #23263a;
+    }
+    @keyframes doggy-bounce {
+      0% { transform: translateY(0);}
+      100% { transform: translateY(-10px);}
+    }
+    .footer {
+      color: #a3b6de;
+      margin: 3.1em 0 0 0;
+      font-size: 1.12em;
+      text-align: center;
+      letter-spacing: 0.04em;
+      padding-bottom: 1.7em;
+      text-shadow: 0 0 7px #1c1f3299;
+    }
+    .footer .fa-dog, .footer .fa-star {
+      color: #ffd700;
+      filter: drop-shadow(0 0 4px #fff8);
+    }
+    .footer-motto {
+      color:#FFD700;
+      font-size:1.19em;
+      text-shadow:0 0 10px #fff4, 0 0 4px #ffd70080;
+      margin-top:0.5em;
+      margin-bottom:0.7em;
+      letter-spacing: 0.08em;
+    }
+    @media (max-width: 900px) {
+      .container { padding: 1.2em 0.2em; max-width: 99vw;}
+      h1 { font-size: 1.23rem;}
+      .main-btn { font-size:1.06rem; padding:13px 12px;}
+      .project-card { min-width:130px; max-width:99vw;}
+      .about-box { max-width:99vw;}
+      .cute-dogs img { width:46px;}
+    }
+  </style>
+</head>
+<body>
+  <!-- Cosmic background -->
+  <div class="bg-animated">
+    <canvas class="stars"></canvas>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+  </div>
+  <div class="container">
+    <img class="avatar" src="https://avatars.githubusercontent.com/u/57099504?v=4" alt="fangxuee Avatar"/>
+    <h1>
+      <span class="neon"><i class="fas fa-dog"></i> fangxuee</span>
+      <span class="neon-accent">— Galactic Dev Universe <i class="fas fa-star"></i></span>
+    </h1>
+    <div class="tagline">
+      <i class="fa-solid fa-rocket"></i> The cutest, most cosmic, and energetic profile in all of GitHub Space! <br>
+      <b>Welcome to fangxuee's Galactic Dev World!</b>
+    </div>
+    <div class="cute-dogs">
+      <img src="https://media.giphy.com/media/YPY6df50NaYve/giphy.gif" alt="Floating Dog"/>
+      <img src="https://media.giphy.com/media/6MWahPArixa6I/giphy.gif" alt="Dog in Spacesuit"/>
+      <img src="https://media.giphy.com/media/Nm8ZPAGOwZUQM/giphy.gif" alt="Party Dog"/>
+      <img src="https://media.giphy.com/media/8vQSQ3cNXuDGo/giphy.gif" alt="Dancing Dog"/>
+    </div>
+    <div class="neon-divider"><div class="bar"></div><div class="dot"></div></div>
+    <div class="about-box">
+      <h2><i class="fas fa-user-astronaut"></i> 🌟 About Me</h2>
+      <ul>
+        <li>🪐 <b>Learning C++ & Python</b> — every bug is a supernova of growth! <i class="fa-brands fa-python"></i></li>
+        <li>🚀 <b>First project:</b> <span style="color:#FFD700;"><b>getfile</b></span> — my launchpad to the code cosmos!</li>
+        <li>💬 <b>Telegram:</b> <a href="https://t.me/fangxuex" target="_blank" style="color:#7dfaff;text-decoration:underline;"><i class="fa-brands fa-telegram"></i> @fangxuex</a></li>
+        <li>💖 <b>Here to share my progress, cute code, and puppy-powered inspiration!</b></li>
+      </ul>
+      <p style="font-size:1.18em; color:#F72585; text-align:center;">
+        🐾 Let's code, wag, and shoot for the stars together! <i class="fas fa-star"></i> 🐾
+      </p>
+    </div>
+    <div class="neon-divider"><div class="bar"></div><div class="dot"></div></div>
+    <div class="projects-panel">
+      <div class="project-card">
+        <div class="project-title">
+          <i class="fa-solid fa-file-arrow-down" style="color:#FFD700;"></i> getfile
+        </div>
+        <div class="project-desc">
+          Ultra-fast, open source file downloader with proxy and progress bar. <br>
+          <span class="project-icons">
+            <i class="fa-brands fa-python" title="Python"></i>
+            <i class="fa-solid fa-bolt" title="Fast"></i>
+            <i class="fa-solid fa-terminal" title="CLI"></i>
+            <i class="fa-solid fa-shield-halved" title="Proxy/Security"></i>
+          </span>
+        </div>
+        <a class="project-link" href="https://github.com/fangxuee/getfile" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+        <a class="project-link" href="https://fangxuee.github.io/projects-readmes/getfile.html" target="_blank"><i class="fa-solid fa-book-open"></i> Neon README</a>
+      </div>
+      <div class="project-card">
+        <div class="project-title">
+          <i class="fa-solid fa-meteor" style="color:#e3aaff;"></i> Next Project
+        </div>
+        <div class="project-desc">
+          Coming soon! Stay tuned for more cosmic tools and fun.<br>
+          <span class="project-icons"><i class="fa-brands fa-github"></i><i class="fa-solid fa-code"></i></span>
+        </div>
+        <span class="project-link" style="background: #c3c7d3; color:#444; cursor: not-allowed; opacity:0.7;">
+          <i class="fa-solid fa-hourglass-half"></i> Soon
+        </span>
+      </div>
+    </div>
+    <div class="neon-divider"><div class="bar"></div><div class="dot"></div></div>
+    <div class="main-btns-title">
+      <i class="fa-solid fa-circle-user"></i> Connect with me
+    </div>
+    <div class="big-buttons">
+      <a class="main-btn" href="https://github.com/fangxuee" target="_blank">
+        <span class="neon-icon"><i class="fab fa-github"></i></span> Go to my GitHub
+      </a>
+      <a class="main-btn" href="https://t.me/fangxuex" target="_blank">
+        <span class="neon-icon"><i class="fab fa-telegram-plane"></i></span> Telegram
+      </a>
+    </div>
+    <div class="footer">
+      <span class="neon-accent"><i class="fas fa-dog"></i> fangxuee</span> — 
+      May your code always sparkle and your bugs be extra cute! <i class="fa-solid fa-star"></i><br>
+      <span class="footer-motto">
+        <i class="fa-solid fa-quote-left"></i>
+        Every star coder started as a beginner. Dogs say: wag, code, nap, repeat!
+        <i class="fa-solid fa-quote-right"></i>
+      </span>
+    </div>
+    <div class="neon-divider"><div class="bar"></div><div class="dot"></div></div>
+  </div>
+  <script>
+    // Animated stars
+    const canvas = document.querySelector('.stars');
+    const ctx = canvas.getContext('2d');
+    function resizeStars() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeStars);
+    resizeStars();
+    const STAR_COUNT = 120;
+    const stars = [];
+    for (let i = 0; i < STAR_COUNT; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.4 + 0.5,
+        o: Math.random() * 0.8 + 0.18,
+        drift: Math.random() * 2 + 0.5
+      });
+    }
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(125,250,255,${s.o})`;
+        ctx.shadowColor = "#e3aaff";
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        s.x += Math.sin(Date.now()/5000 + i)*0.07;
+        s.y += Math.cos(Date.now()/6700 + i)*0.06;
+        if (s.x > canvas.width) s.x = 0;
+        if (s.x < 0) s.x = canvas.width;
+        if (s.y > canvas.height) s.y = 0;
+        if (s.y < 0) s.y = canvas.height;
+      }
+      requestAnimationFrame(drawStars);
+    }
+    drawStars();
+  </script>
+</body>
+</html>
