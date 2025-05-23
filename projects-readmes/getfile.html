@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>getfile — Fast File Fetcher</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Premium Futuristic Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: 'JetBrains Mono', 'Orbitron', monospace;
+      background: linear-gradient(140deg, #0d1117 60%, #252e46 100%);
+      color: #e0e6ed;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    .bg-animated {
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0; pointer-events: none;
+    }
+    .stars { position: absolute; left: 0; top: 0; width: 100vw; height: 100vh; }
+    .shooting-star {
+      position: fixed;
+      width: 2px; height: 80px; border-radius: 1px;
+      background: linear-gradient(180deg, #71e9ff 0%, #71e9ff00 90%);
+      opacity: 0.75;
+      filter: blur(0.6px);
+      z-index: 1; pointer-events: none;
+      animation: shoot 2.7s linear infinite;
+    }
+    .shooting-star:nth-child(2) { left:20vw; animation-delay: 0.5s;}
+    .shooting-star:nth-child(3) { left:55vw; animation-delay: 1.3s;}
+    .shooting-star:nth-child(4) { left:80vw; animation-delay: 2.1s;}
+    .shooting-star:nth-child(5) { left:35vw; animation-delay: 1.8s;}
+    @keyframes shoot {
+      0% { top: -80px; opacity: 0; }
+      10% { opacity: 0.8; }
+      80% { opacity: 0.8; }
+      100% { top: 110vh; opacity: 0; }
+    }
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 540px;
+      margin: 120px auto 0 auto;
+      background: rgba(20, 24, 32, 0.97);
+      border-radius: 22px;
+      box-shadow: 0 8px 42px #2be7ff33, 0 0 0 #fff0;
+      padding: 2.2rem 1.2rem 2.6rem 1.2rem;
+      text-align: center;
+      border: 2px solid #243149;
+      backdrop-filter: blur(2px);
+      overflow: visible;
+    }
+    .neon-divider {
+      margin: 2.7em auto 2.7em auto;
+      width: 80%;
+      max-width: 330px;
+      height: 7px;
+      background: none;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .neon-divider .bar {
+      width: 100%;
+      height: 2.4px;
+      border-radius: 1.5px;
+      background: linear-gradient(90deg, #58d6ff 0%, #e7aaff 70%, #a5f7ff 100%);
+      box-shadow: 0 0 14px #e7aaff60, 0 0 19px #58d6ff22;
+      opacity: 0.93;
+      animation: neon-pulse 3.1s infinite alternate;
+    }
+    .neon-divider .dot {
+      width: 13px; height: 13px; border-radius: 50%;
+      background: radial-gradient(circle, #fff 65%, #58d6ff 80%, #e7aaff 100%);
+      box-shadow: 0 0 18px #e7aaffee, 0 0 24px #58d6ff44;
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%,-50%);
+      animation: neon-dot-pulse 2.2s infinite alternate;
+      z-index: 2;
+    }
+    @keyframes neon-pulse {
+      0% { opacity: 0.82; box-shadow: 0 0 7px #58d6ff44, 0 0 8px #e7aaff22; }
+      100% { opacity: 1; box-shadow: 0 0 19px 5px #e7aaffb0, 0 0 25px #a5f7ff77; }
+    }
+    @keyframes neon-dot-pulse {
+      0% { box-shadow: 0 0 7px #e7aaffcc, 0 0 17px #58d6ff66; }
+      100% { box-shadow: 0 0 19px #e7aaffff, 0 0 27px #a5f7ff88; }
+    }
+    h1 {
+      font-size: 2.1rem;
+      font-family: 'Orbitron', 'JetBrains Mono', monospace;
+      letter-spacing: 3.5px;
+      color: #58d6ff;
+      margin: 0.2em 0 0.45em 0;
+      text-shadow: 0 0 18px #18d6ff99, 0 0 0 transparent;
+      animation: logo-glow 2.1s infinite alternate;
+      font-weight: 700;
+    }
+    @keyframes logo-glow {
+      0% { text-shadow: 0 0 6px #18d6ff33; }
+      100% { text-shadow: 0 0 24px #75f7ffcc, 0 0 14px #58d6ff99; }
+    }
+    .neon {
+      color: #58d6ff;
+      text-shadow: 0 0 8px #58d6ffbb, 0 0 18px #58d6ff77;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+    }
+    .neon-accent {
+      color: #e7aaff;
+      text-shadow: 0 0 11px #e7aaffcc, 0 0 28px #e7aaff55;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+    }
+    .os-text {
+      background: linear-gradient(90deg, #e7aaff 0%, #58d6ff 70%, #fff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+      font-weight: bold;
+      font-size: 1.11em;
+      letter-spacing: 1.2px;
+      animation: os-glow 2.2s infinite alternate;
+      filter: drop-shadow(0 0 4px #e7aaff33);
+    }
+    @keyframes os-glow {
+      0% { text-shadow: 0 0 6px #e7aaff44; }
+      100% { text-shadow: 0 0 16px #e7aaff; }
+    }
+    .desc {
+      color: #e0e6ed;
+      font-size: 1.14rem;
+      margin: 1.2rem 0 2.1rem 0;
+      line-height: 1.72;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.13px;
+      text-shadow: 0 0 3px #0f1c2e77;
+    }
+    .btn-github {
+      display: inline-block;
+      background: linear-gradient(90deg, #58d6ff 0%, #e7aaff 100%);
+      color: #191b2e;
+      font-family: 'Orbitron', 'JetBrains Mono', monospace;
+      font-size: 1.14rem;
+      font-weight: 800;
+      border: none;
+      border-radius: 99px;
+      padding: 0.8em 2.4em;
+      margin: 1.23em 0 1.5em 0;
+      cursor: pointer;
+      letter-spacing: 2px;
+      box-shadow: 0 0 14px #58d6ff88, 0 0 6px #e7aaff44;
+      text-shadow: 0 0 7px #fff9, 0 0 2px #fff9;
+      transition: background 0.17s, color 0.17s, transform 0.12s, box-shadow 0.17s;
+      outline: none;
+      position: relative;
+      z-index: 3;
+      animation: btn-pulse 2.7s infinite alternate cubic-bezier(.62,.02,.4,1);
+      text-decoration: none;
+    }
+    .btn-github:hover {
+      background: linear-gradient(90deg, #e7aaff 0%, #58d6ff 100%);
+      color: #10172a;
+      transform: scale(1.07) translateY(-2px);
+      box-shadow: 0 0 34px #e7aaffcc, 0 0 12px #fff8;
+      letter-spacing: 2.3px;
+    }
+    @keyframes btn-pulse {
+      0% { box-shadow: 0 0 13px #58d6ff88; }
+      100% { box-shadow: 0 0 32px #e7aaff55; }
+    }
+    .features {
+      margin: 2.1em 0 2em 0;
+      text-align: left;
+      font-size: 1.09em;
+      color: #a1b8d6;
+      list-style: none;
+      padding: 0;
+      background: rgba(34,40,62,0.21);
+      border-radius: 10px;
+      box-shadow: 0 0 7px #2be7ff11;
+      display: inline-block;
+      min-width: 60%;
+      font-weight: 500;
+    }
+    .features li {
+      margin: 0.81em 0;
+      padding-left: 1.18em;
+      position: relative;
+      transition: color 0.2s;
+    }
+    .features li:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.58em;
+      width: 0.52em;
+      height: 0.52em;
+      border-radius: 50%;
+      background: linear-gradient(90deg, #58d6ff 0%, #e7aaff 90%);
+      box-shadow: 0 0 5px #58d6ff77;
+    }
+    .features li:hover {
+      color: #fff;
+      text-shadow: 0 0 6px #58d6ff70;
+    }
+    .footer {
+      color: #6c7a99;
+      margin: 2.1em 0 0 0;
+      font-size: 1.02em;
+      text-align: center;
+      letter-spacing: 0.04em;
+      padding-bottom: 1.7em;
+      text-shadow: 0 0 6px #151c2f99;
+    }
+    /* Terminal Animation */
+    .terminal-outer {
+      margin: 0 auto 2.2em auto;
+      width: 99%;
+      max-width: 420px;
+      border-radius: 14px;
+      background: linear-gradient(120deg, #151c23 60%, #1a2430 100%);
+      box-shadow: 0 6px 24px #02b8ff11, 0 1.5px 0 #273246;
+      position: relative;
+      border: 1.5px solid #1e222b;
+      overflow: hidden;
+      z-index: 10;
+    }
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      background: linear-gradient(90deg, #21262e 60%, #232c3a 100%);
+      height: 32px;
+      border-bottom: 1px solid #273246;
+      padding: 0 1em;
+      font-size: 1.03em;
+      letter-spacing: 1.1px;
+      user-select: none;
+    }
+    .term-dot {
+      width: 12px; height: 12px; border-radius: 50%; margin-right: 7px;
+      display: inline-block;
+    }
+    .term-dot.red { background: #fd6464; box-shadow: 0 0 4px #fd646422;}
+    .term-dot.yellow { background: #ffe669; box-shadow: 0 0 4px #ffe66922;}
+    .term-dot.green { background: #70f491; box-shadow: 0 0 4px #70f49122;}
+    .terminal-body {
+      font-family: 'JetBrains Mono', monospace;
+      background: #131820;
+      padding: 1em 1.1em 1.1em 1.1em;
+      min-height: 92px;
+      color: #e0e6ed;
+      font-size: 1.01em;
+      text-align: left;
+      letter-spacing: 0.7px;
+      line-height: 1.7;
+      position: relative;
+      overflow-x: auto;
+      white-space: pre-line;
+      word-break: break-all;
+    }
+    .terminal-prompt {
+      color: #58d6ff;
+      font-weight: bold;
+      margin-right: 0.3em;
+      display: inline;
+      text-shadow: 0 0 3px #6fd8ffcc;
+    }
+    .terminal-cmd {
+      color: #f8fafc;
+      display: inline;
+    }
+    .terminal-output {
+      color: #62e1b6;
+      display: block;
+      margin: 0.7em 0 0.5em 0;
+      text-shadow: 0 0 2px #37fae566;
+    }
+    .cursor-blink {
+      display: inline-block;
+      width: 0.7em;
+      background: #e7aaff;
+      border-radius: 1px;
+      height: 1.15em;
+      margin-left: 2px;
+      animation: blink 1s steps(1) infinite;
+      vertical-align: middle;
+      box-shadow: 0 0 2px #e7aaffaa;
+    }
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%,100% { opacity: 0; }
+    }
+    /* Docs Cards */
+    .docs-card {
+      background: linear-gradient(120deg, #232d42 60%, #242b3a 100%);
+      border-radius: 13px;
+      box-shadow: 0 0 12px #4ae7ff19, 0 0 0 #fff0;
+      padding: 1.2em 1.1em 1.13em 1.1em;
+      margin: 2.8em auto 1.2em auto;
+      color: #cbe9fd;
+      font-size: 1.06em;
+      max-width: 400px;
+      text-align: left;
+      border: 1.2px solid #2e3b53;
+      position: relative;
+      z-index: 2;
+      transition: box-shadow .2s;
+    }
+    .docs-card h2 {
+      color: #e7aaff;
+      font-family: 'Orbitron', 'JetBrains Mono', monospace;
+      font-size: 1.08rem;
+      letter-spacing: 2px;
+      text-shadow: 0 0 8px #7de7fa99, 0 0 2px #fff;
+      margin: 0 0 0.7em 0;
+    }
+    .docs-card code, .docs-card pre {
+      font-family: 'JetBrains Mono', 'monospace', monospace;
+      background: #141c2a;
+      color: #7de7fa;
+      border-radius: 5px;
+      padding: 0.1em 0.4em;
+      font-size: 0.98em;
+    }
+    .docs-card pre {
+      display: block;
+      padding: 0.8em 1em;
+      background: #18202b;
+      color: #e7aaff;
+      margin: 0.5em 0 0.7em 0;
+      border-radius: 8px;
+      font-size: 0.99em;
+    }
+    .docs-card ul, .docs-card ol {
+      margin-top: 0.6em;
+      margin-bottom: 0.6em;
+      padding-left: 1.25em;
+    }
+    .docs-card li {
+      margin-bottom: 0.42em;
+    }
+    .docs-card .comingsoon {
+      margin-top: 1em;
+      color: #ffd766;
+      font-size: 1.04em;
+      font-weight: bold;
+    }
+    @media (max-width: 700px) {
+      .container { padding: 0.7em 0.2em; max-width: 98vw;}
+      h1 { font-size: 1.07rem;}
+      .btn-github { font-size: 0.98rem; padding: 0.6em 1.1em; }
+      .terminal-outer { max-width: 97vw; }
+      .docs-card { max-width: 97vw; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Cosmic background -->
+  <div class="bg-animated">
+    <canvas class="stars"></canvas>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+  </div>
+  <div class="container">
+
+    <div class="neon-divider"><div class="bar"></div><div class="dot"></div></div>
+
+    <div class="terminal-outer">
+      <div class="terminal-header">
+        <span class="term-dot red"></span>
+        <span class="term-dot yellow"></span>
+        <span class="term-dot green"></span>
+        <span style="margin-left:9px; color:#4c5b6d; font-size:0.98em">getfile user@night-sky</span>
+      </div>
+      <div class="terminal-body" id="terminal-body">
+        <span class="terminal-prompt">$</span> <span class="terminal-cmd" id="cmd-text"></span><span class="cursor-blink" id="cursor"></span>
+      </div>
+    </div>
+
+    <div class="neon-divider"><div class="bar"></div><div class="dot"></div></div>
+
+    <h1>
+      <span class="neon">GetFile</span>
+      <span class="neon-accent"> – Fast File Fetcher on Python</span>
+    </h1>
+    <div class="desc">
+      <b>GetFile</b> is a fast, high-performance CLI tool for ultra-fast file downloads.<br>
+      Inspired by <span class="neon">wget</span> and <span class="neon-accent">curl</span>. Developed for people who want fast, simple and
+      <span class="os-text">Open Source</span> file Fetcher.<br>
+      For developers and power users who demand speed, reliability, and style.
+    </div>
+    <div class="neon-divider"><div class="bar"></div><div class="dot"></div></div>
+    <a href="https://github.com/fangxuee/getfile" class="btn-github">Go to GitHub</a>
+    <div class="neon-divider"><div class="bar"></div><div class="dot"></div></div>
+    <ul class="features">
+      <li>Ultra-fast downloads with smart proxy selection from <code>proxies.txt</code></li>
+      <li>Seamless HTTP, HTTPS, SOCKS5, and Shadowsocks support</li>
+      <li>Automatic filename detection and direct save</li>
+      <li>Progress bars with real-time stats</li>
+      <li>Simple, scriptable, and cross-platform</li>
+      <li>Terminal utility for everyday & professional use</li>
+    </ul>
+
+    <!-- INSTALLATION DOC -->
+    <div class="docs-card">
+      <h2>🚀 Installation</h2>
+      <ol>
+        <li>Clone or download this repository.</li>
+        <li>Install dependencies:<br>
+          <code>pip install -r requirements.txt</code>
+        </li>
+        <li>Download a file:<br>
+          <code>python3 getfile.py "https://example.com/file.zip"</code>
+        </li>
+      </ol>
+      <div style="margin-top:0.5em;color:#8fadc1;font-size:0.97em;">Works with Python 3.6+ on Linux, macOS, and Windows.</div>
+      <div class="comingsoon">
+        <span>⚡ Auto dependency &amp; install script for Win/Mac/Linux coming soon!</span>
+      </div>
+    </div>
+
+    <div class="docs-card">
+      <h2>🌐 Proxy Support</h2>
+      <b style="color:#e7aaff;">getfile</b> supports HTTP, HTTPS, SOCKS5, and Shadowsocks proxies for fast, reliable downloads.
+      <ul>
+        <li>Create a file named <code>proxies.txt</code> in the same directory as <code>getfile.py</code>.</li>
+        <li>Add proxy addresses, one per line. Supported formats:
+          <ul>
+            <li><code>http://127.0.0.1:8080</code></li>
+            <li><code>socks5://127.0.0.1:1080</code></li>
+            <li><code>https://user:pass@proxy.example.com:3128</code></li>
+            <li><code>ss://aes-256-cfb:password@1.2.3.4:8388</code> <span style="opacity:.7;">(Shadowsocks)</span></li>
+          </ul>
+        </li>
+      </ul>
+      <b style="color:#7de7fa;">How it works:</b>
+      <ul>
+        <li><b>getfile</b> reads <code>proxies.txt</code> (if present)</li>
+        <li>Tries each proxy in order to find the fastest one</li>
+        <li>Uses the working proxy for your download</li>
+      </ul>
+      <pre>http://127.0.0.1:7890
+socks5://127.0.0.1:1080</pre>
+      <span style="color:#a1b8d6;">Then run:</span>
+      <pre>python3 getfile.py "https://example.com/file.zip"</pre>
+      <div style="margin-top:1.1em;font-size:0.99em;color:#8fadc1;">
+        <b>Tip:</b> If you don’t want to use a proxy, remove or rename <code>proxies.txt</code>.
+      </div>
+    </div>
+
+    <div class="docs-card">
+      <h2>⚡ How It Works</h2>
+      <ul>
+        <li><b>getfile</b> checks for <code>proxies.txt</code> and loads proxy addresses if present.</li>
+        <li>It pings proxies and uses the fastest available one.</li>
+        <li>Downloads the target file directly to your system, showing a real-time progress bar and stats.</li>
+        <li>Supports HTTP, HTTPS, SOCKS5, and Shadowsocks protocols.</li>
+        <li>Automatic filename detection and smart error handling make downloads simple and robust.</li>
+      </ul>
+      <div style="margin-top:1em;font-size:0.97em;color:#8fadc1;">
+        <b>Open Source</b> and blazing fast for everyone!
+      </div>
+    </div>
+    <div class="neon-divider"><div class="bar"></div><div class="dot"></div></div>
+    <div class="footer">
+      <span class="neon-accent">getfile</span> — Built for the future.<br>
+      Project by <a href="https://github.com/fangxuee" style="color:#58d6ff;">@fangxuee</a> · Source and docs on <a href="https://github.com/fangxuee/getfile" style="color:#e7aaff;">GitHub</a>
+    </div>
+    <div class="neon-divider"><div class="bar"></div><div class="dot"></div></div>
+  </div>
+  <script>
+    // Terminal typing animation
+    const command = 'python3 getfile.py "https://example.com/file.zip"';
+    const outputLines = [
+      'Connecting to fastest proxy...',
+      'Downloading: [#############-----] 77%  2.9MB/3.7MB  2.7MB/s',
+      'Download complete: file.zip (3.7MB) ✔️'
+    ];
+    let cmdIdx = 0;
+    const speed = 34;
+    const outputSpeed = 17;
+    const cmdText = document.getElementById('cmd-text');
+    const cursor = document.getElementById('cursor');
+    const termBody = document.getElementById('terminal-body');
+
+    function typeCommand() {
+      if (cmdIdx < command.length) {
+        cmdText.textContent += command[cmdIdx++];
+        setTimeout(typeCommand, speed - Math.random() * 8);
+      } else {
+        setTimeout(() => printOutputLine(0), 700);
+      }
+    }
+    function printOutputLine(line) {
+      if (line >= outputLines.length) {
+        cursor.style.display = "none";
+        return;
+      }
+      let span = document.createElement('span');
+      span.className = 'terminal-output';
+      span.style.color = [ "#93e6fe", "#58d6ff", "#7de7a1"][line % 3];
+      termBody.appendChild(document.createElement('br'));
+      termBody.appendChild(span);
+      let chars = outputLines[line].split('');
+      let i = 0;
+      function typeLine() {
+        if (i < chars.length) {
+          span.textContent += chars[i++];
+          setTimeout(typeLine, outputSpeed + Math.random()*7);
+        } else {
+          setTimeout(() => printOutputLine(line + 1), 500);
+        }
+      }
+      typeLine();
+    }
+    typeCommand();
+
+    // Animated stars
+    const canvas = document.querySelector('.stars');
+    const ctx = canvas.getContext('2d');
+    function resizeStars() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeStars);
+    resizeStars();
+    const STAR_COUNT = 110;
+    const stars = [];
+    for (let i = 0; i < STAR_COUNT; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.4 + 0.5,
+        o: Math.random() * 0.8 + 0.18,
+        drift: Math.random() * 2 + 0.5
+      });
+    }
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(110,214,255,${s.o})`;
+        ctx.shadowColor = "#e7aaff";
+        ctx.shadowBlur = 7;
+        ctx.fill();
+        s.x += Math.sin(Date.now()/5000 + i)*0.07;
+        s.y += Math.cos(Date.now()/6700 + i)*0.06;
+        if (s.x > canvas.width) s.x = 0;
+        if (s.x < 0) s.x = canvas.width;
+        if (s.y > canvas.height) s.y = 0;
+        if (s.y < 0) s.y = canvas.height;
+      }
+      requestAnimationFrame(drawStars);
+    }
+    drawStars();
+  </script>
+</body>
+</html>
