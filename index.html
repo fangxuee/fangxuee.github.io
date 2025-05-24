@@ -2,23 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>fangxuee — Galactic Dev Universe</title>
+  <title>fangxuee — Cosmic Neon Universe</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=JetBrains+Mono:wght@500&family=Nunito:wght@800&display=swap" rel="stylesheet">
+  <!-- Futuristic & Cute Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=JetBrains+Mono:wght@500&family=Fredoka:wght@800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
   <style>
+    :root {
+      --neon-cyan: #37e3fc;
+      --neon-purple: #ae7aff;
+      --neon-pink: #ff64c2;
+      --neon-green: #6fffbb;
+      --neon-yellow: #ffe168;
+      --neon-accent: #e3aaff;
+      --neon-blue: #7dfaff;
+      --cosmic-bg: linear-gradient(135deg, #060815 0%, #0a0e1d 80%, #0d1021 100%);
+      --terminal-bg: #10131d;
+      --terminal-bar: #191c28;
+      --font-main: 'JetBrains Mono', 'Fredoka', 'Orbitron', monospace;
+      --font-cute: 'Fredoka', 'Orbitron', cursive;
+      --font-logo: 'Orbitron', 'Fredoka', sans-serif;
+    }
     html, body {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      width: 100vw;
-      font-family: 'JetBrains Mono', 'Orbitron', 'Nunito', monospace;
-      background: linear-gradient(135deg, #090c18 0%, #12172a 100%);
+      margin: 0; padding: 0; min-height: 100vh; width: 100vw;
+      font-family: var(--font-main);
+      background: var(--cosmic-bg);
       color: #d6eaff;
       overflow-x: hidden;
       scroll-behavior: smooth;
     }
+    body { position: relative; }
+
+    /* Cosmic Neon Background */
     .bg-animated {
       position: fixed;
       left: 0; top: 0;
@@ -29,7 +44,7 @@
     .shooting-star {
       position: fixed;
       width: 2px; height: 80px; border-radius: 1px;
-      background: linear-gradient(180deg, #7dfaff 0%, #a7baff00 90%);
+      background: linear-gradient(180deg, var(--neon-blue) 0%, #a7baff00 90%);
       opacity: 0.75;
       filter: blur(0.6px);
       z-index: 1; pointer-events: none;
@@ -45,9 +60,108 @@
       80% { opacity: 0.8; }
       100% { top: 110vh; opacity: 0; }
     }
+
+    /* Terminal at Top */
+    .mac-terminal {
+      max-width: 660px;
+      margin: 56px auto 32px auto;
+      border-radius: 18px;
+      box-shadow: 0 4px 34px #7dfaff55, 0 0 0 #fff0;
+      background: var(--terminal-bg);
+      border: 2.5px solid #22253b;
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+      transition: box-shadow .17s;
+      animation: fadeInUp 1.3s cubic-bezier(.6,0,.3,1) both;
+      /* Centered */
+      display: flex; flex-direction: column; align-items: stretch;
+    }
+    .terminal-bar {
+      background: var(--terminal-bar);
+      height: 36px;
+      display: flex;
+      align-items: center;
+      padding: 0 1em;
+      position: relative;
+      border-bottom: 1.5px solid #22253b;
+    }
+    .term-dot { width: 13px; height: 13px; border-radius: 50%; margin-right: 7px; display: inline-block;}
+    .term-dot.red { background: #fd6464; box-shadow: 0 0 6px #fd646422;}
+    .term-dot.yellow { background: #ffe669; box-shadow: 0 0 6px #ffe66922;}
+    .term-dot.green { background: #70f491; box-shadow: 0 0 6px #70f49122;}
+    .mac-title {
+      color: #a1b8d6;
+      font-family: var(--font-cute);
+      font-size: 1.07em;
+      margin-left: 14px;
+      letter-spacing: 1.2px;
+      user-select: none;
+    }
+    .terminal-body {
+      background: var(--terminal-bg);
+      font-family: var(--font-main);
+      color: #f7fdff;
+      font-size: 1.08em;
+      padding: 1.3em 1.2em 1.2em 1.4em;
+      min-height: 120px;
+      text-align: left;
+      letter-spacing: 0.9px;
+      line-height: 1.85;
+      position: relative;
+      overflow-x: auto;
+      border-radius: 0 0 18px 18px;
+    }
+    .terminal-line { margin-bottom: 0.11em; }
+    .terminal-prompt { color: var(--neon-cyan); font-weight: bold; margin-right: 0.3em; display: inline; text-shadow: 0 0 5px #6fd8ffcc;}
+    .terminal-cmd-input {
+      background: transparent;
+      color: #fff;
+      font-family: inherit;
+      font-size: 1.06em;
+      border: none;
+      outline: none;
+      width: 320px;
+      max-width: 60vw;
+      caret-color: var(--neon-pink);
+    }
+    .terminal-output { color: var(--neon-green); display: block; margin: 0.32em 0 0.38em 0; text-shadow: 0 0 8px #7dfaff66;}
+    .cursor-blink { display: inline-block; width: 0.66em; background: var(--neon-purple); border-radius: 1px; height: 1.12em; margin-left: 2px; animation: blink 1s steps(1) infinite; vertical-align: middle; box-shadow: 0 0 2px var(--neon-purple)aa;}
+    @keyframes blink { 0%, 50% { opacity: 1; } 51%,100% { opacity: 0; } }
+    .cosmofetch-label { color: var(--neon-pink); font-weight: bold;}
+    .cosmofetch-value { color: var(--neon-cyan);}
+    .cosmofetch-ascii { color: var(--neon-yellow); font-family: 'JetBrains Mono', monospace; font-size:1em; line-height:1.05;}
+
+    /* Cosmic Banner */
+    .cosmic-banner {
+      text-align: center;
+      font-family: var(--font-logo);
+      font-size: 2.1em;
+      color: var(--neon-yellow);
+      letter-spacing: 3px;
+      text-shadow: 0 0 22px var(--neon-yellow),0 0 19px var(--neon-pink)66;
+      margin-top: 16px;
+      margin-bottom: 0.1em;
+      animation: logo-glow 2.1s infinite alternate;
+    }
+    .cosmic-banner span {
+      color: var(--neon-accent);
+      font-size: 0.65em;
+      font-family: var(--font-cute);
+      display: block;
+      margin: 0.7em 0 0 0;
+      letter-spacing: 0.08em;
+      text-shadow: 0 0 6px var(--neon-cyan)99;
+    }
+    @keyframes logo-glow {
+      0% { text-shadow: 0 0 10px var(--neon-yellow)44; }
+      100% { text-shadow: 0 0 28px var(--neon-yellow)cc, 0 0 22px var(--neon-pink)99; }
+    }
+
+    /* Main centered card/container */
     .container {
       max-width: 770px;
-      margin: 70px auto 0 auto;
+      margin: 40px auto 60px auto;
       background: rgba(16,18,33,0.99);
       border-radius: 31px;
       box-shadow: 0 8px 55px #4a2aff13, 0 0 0 #fff0;
@@ -58,74 +172,10 @@
       z-index: 2;
       position: relative;
       overflow: visible;
-    }
-    .neon-divider {
-      width: 85%;
-      max-width: 410px;
-      margin: 2.8em auto 2.5em auto;
-      height: 9px;
+      animation: fadeInUp 1.2s cubic-bezier(.6,0,.3,1) 0.13s both;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      background: none;
-      position: relative;
-    }
-    .neon-divider .bar {
-      width: 100%;
-      height: 3px;
-      border-radius: 2px;
-      background: linear-gradient(90deg, #8ad7fc 0%, #e3aaff 70%, #5ffcff 100%);
-      box-shadow: 0 0 14px #e7aaff80, 0 0 19px #58d6ff44;
-      opacity: 0.99;
-      animation: neon-pulse 3.1s infinite alternate;
-    }
-    .neon-divider .dot {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #fff 65%, #8ad7fc 80%, #e3aaff 100%);
-      box-shadow: 0 0 19px #e7aaffee, 0 0 24px #58d6ff99;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%,-50%);
-      animation: neon-dot-pulse 2.2s infinite alternate;
-      z-index: 2;
-    }
-    @keyframes neon-pulse {
-      0% { opacity: 0.82; box-shadow: 0 0 9px #8ad7fc44, 0 0 12px #e3aaff22; }
-      100% { opacity: 1; box-shadow: 0 0 32px 8px #e7aaffb0, 0 0 38px #a5f7ff77; }
-    }
-    @keyframes neon-dot-pulse {
-      0% { box-shadow: 0 0 13px #e7aaffcc, 0 0 18px #58d6ff66; }
-      100% { box-shadow: 0 0 32px #e7aaffff, 0 0 43px #a5f7ff99; }
-    }
-    .neon {
-      color: #7dfaff;
-      text-shadow: 0 0 11px #7dfaffbb, 0 0 22px #7dfaff77, 0 0 48px #7dfaff33;
-      letter-spacing: 0.04em;
-      font-weight: 700;
-    }
-    .neon-accent {
-      color: #e3aaff;
-      text-shadow: 0 0 13px #e3aaffcc, 0 0 29px #e3aaff55, 0 0 55px #a5e7ff66;
-      letter-spacing: 0.04em;
-      font-weight: 700;
-    }
-    h1 {
-      font-family: 'Orbitron', 'Nunito', monospace;
-      font-size: 2.45em;
-      margin-top: 0.23em;
-      margin-bottom: 0.17em;
-      color: #7dfaff;
-      text-shadow: 0 0 22px #7dfaff99, 0 0 0 transparent;
-      font-weight: 700;
-      letter-spacing: 3.5px;
-      animation: logo-glow 2.1s infinite alternate;
-    }
-    @keyframes logo-glow {
-      0% { text-shadow: 0 0 12px #7dfaff33; }
-      100% { text-shadow: 0 0 35px #7dfaffcc, 0 0 24px #e3aaffbb; }
     }
     .avatar {
       width: 114px;
@@ -149,13 +199,90 @@
       box-shadow: 0 0 55px #e3aaffcc, 0 0 22px #7dfaff99;
       filter: drop-shadow(0 0 10px #fff9);
     }
+    h1 {
+      font-family: 'Orbitron', 'Nunito', monospace;
+      font-size: 2.45em;
+      margin-top: 0.23em;
+      margin-bottom: 0.17em;
+      color: #7dfaff;
+      text-shadow: 0 0 22px #7dfaff99, 0 0 0 transparent;
+      font-weight: 700;
+      letter-spacing: 3.5px;
+      animation: logo-glow 2.1s infinite alternate;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.4em;
+      align-items: center;
+    }
     .tagline {
-      font-family: 'Nunito', 'JetBrains Mono', monospace;
+      font-family: 'Fredoka', 'Nunito', 'JetBrains Mono', monospace;
       font-size: 1.32em;
       color: #c2aaff;
       margin-bottom: 1.65em;
       text-shadow: 0 0 9px #8ad7fc44;
       line-height:1.5;
+      text-align: center;
+    }
+    .cute-dogs {
+      margin: 1.7em 0 2.2em 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+    }
+    .cute-dogs img {
+      border-radius: 22px;
+      box-shadow: 0 0 24px #e3aaff55, 0 0 5px #7dfaff33;
+      width: 80px;
+      background: #151728;
+      transition: transform 0.13s;
+      animation: doggy-bounce 4s infinite alternate;
+    }
+    .cute-dogs img:hover {
+      transform: scale(1.08) rotate(-7deg);
+      box-shadow: 0 0 50px #e3aaff99, 0 0 24px #ffd700bb;
+      background: #23263a;
+    }
+    @keyframes doggy-bounce {
+      0% { transform: translateY(0);}
+      100% { transform: translateY(-10px);}
+    }
+    .neon-divider {
+      width: 85%;
+      max-width: 410px;
+      margin: 2.8em auto 2.5em auto;
+      height: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      position: relative;
+    }
+    .neon-divider .bar {
+      width: 100%;
+      height: 3px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #8ad7fc 0%, #e3aaff 70%, #5ffcff 100%);
+      box-shadow: 0 0 14px #e7aaff80, 0 0 19px #58d6ff44;
+      opacity: 0.99;
+      animation: neon-pulse 3.1s infinite alternate;
+    }
+    .neon-divider .dot {
+      width: 16px; height: 16px; border-radius: 50%;
+      background: radial-gradient(circle, #fff 65%, #8ad7fc 80%, #e3aaff 100%);
+      box-shadow: 0 0 19px #e7aaffee, 0 0 24px #58d6ff99;
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+      animation: neon-dot-pulse 2.2s infinite alternate;
+      z-index: 2;
+    }
+    @keyframes neon-pulse {
+      0% { opacity: 0.82; box-shadow: 0 0 9px #8ad7fc44, 0 0 12px #e3aaff22; }
+      100% { opacity: 1; box-shadow: 0 0 32px 8px #e7aaffb0, 0 0 38px #a5f7ff77; }
+    }
+    @keyframes neon-dot-pulse {
+      0% { box-shadow: 0 0 13px #e3aaffcc, 0 0 18px #58d6ff66; }
+      100% { box-shadow: 0 0 32px #e3aaffff, 0 0 43px #a5f7ff99; }
     }
     .about-box {
       background: linear-gradient(110deg,#11172b 60%,#1f1e35 100%);
@@ -169,6 +296,7 @@
       border: 2.2px solid #2e2b53;
       position: relative;
       z-index: 2;
+      font-size: 1.15em;
     }
     .about-box h2 {
       color: #e3aaff;
@@ -315,7 +443,6 @@
     .main-btn .neon-icon {
       margin-right: 0.7em;
       font-size: 1.2em;
-      /* Neon yellow to black gradient icon background */
       background: linear-gradient(120deg, #ffd700 0%, #ffe56b 45%, #0c0e12 100%);
       color: #191f33;
       border-radius: 50%;
@@ -340,30 +467,6 @@
       color: #ffd700;
       box-shadow: 0 0 32px #ffd70099, 0 0 14px #0c0e1288 inset;
       border-color: #ffd700;
-    }
-    .cute-dogs {
-      margin: 1.7em 0 2.2em 0;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 18px;
-    }
-    .cute-dogs img {
-      border-radius: 22px;
-      box-shadow: 0 0 24px #e3aaff55, 0 0 5px #7dfaff33;
-      width: 80px;
-      background: #151728;
-      transition: transform 0.13s;
-      animation: doggy-bounce 4s infinite alternate;
-    }
-    .cute-dogs img:hover {
-      transform: scale(1.08) rotate(-7deg);
-      box-shadow: 0 0 50px #e3aaff99, 0 0 24px #ffd700bb;
-      background: #23263a;
-    }
-    @keyframes doggy-bounce {
-      0% { transform: translateY(0);}
-      100% { transform: translateY(-10px);}
     }
     .footer {
       color: #a3b6de;
@@ -394,6 +497,10 @@
       .about-box { max-width:99vw;}
       .cute-dogs img { width:46px;}
     }
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(40px);}
+      100% { opacity: 1; transform: translateY(0);}
+    }
   </style>
 </head>
 <body>
@@ -406,6 +513,30 @@
     <div class="shooting-star"></div>
     <div class="shooting-star"></div>
   </div>
+
+  <div class="cosmic-banner">
+    type <b>"cosmofetch"</b> in terminal<br>
+    <span>for cosmic info in style!</span>
+  </div>
+
+  <!-- Mac Terminal at top -->
+  <div class="mac-terminal" id="cosmo-terminal">
+    <div class="terminal-bar">
+      <span class="term-dot red"></span>
+      <span class="term-dot yellow"></span>
+      <span class="term-dot green"></span>
+      <span class="mac-title">cosmic@fangxuee:~</span>
+    </div>
+    <div class="terminal-body" id="terminal-body">
+      <div class="terminal-line">
+        <span class="terminal-prompt">$</span>
+        <input class="terminal-cmd-input" id="cmd-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+        <span class="cursor-blink"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main container (all your previous content below) -->
   <div class="container">
     <img class="avatar" src="https://avatars.githubusercontent.com/u/57099504?v=4" alt="fangxuee Avatar"/>
     <h1>
@@ -490,7 +621,7 @@
     <div class="neon-divider"><div class="bar"></div><div class="dot"></div></div>
   </div>
   <script>
-    // Animated stars
+    // --- Animated stars background ---
     const canvas = document.querySelector('.stars');
     const ctx = canvas.getContext('2d');
     function resizeStars() {
@@ -499,15 +630,14 @@
     }
     window.addEventListener('resize', resizeStars);
     resizeStars();
-    const STAR_COUNT = 120;
+    const STAR_COUNT = 130;
     const stars = [];
     for (let i = 0; i < STAR_COUNT; i++) {
       stars.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        r: Math.random() * 1.4 + 0.5,
-        o: Math.random() * 0.8 + 0.18,
-        drift: Math.random() * 2 + 0.5
+        r: Math.random() * 1.4 + 0.7,
+        o: Math.random() * 0.8 + 0.23
       });
     }
     function drawStars() {
@@ -520,8 +650,8 @@
         ctx.shadowColor = "#e3aaff";
         ctx.shadowBlur = 8;
         ctx.fill();
-        s.x += Math.sin(Date.now()/5000 + i)*0.07;
-        s.y += Math.cos(Date.now()/6700 + i)*0.06;
+        s.x += Math.sin(Date.now()/5000 + i)*0.05;
+        s.y += Math.cos(Date.now()/6700 + i)*0.05;
         if (s.x > canvas.width) s.x = 0;
         if (s.x < 0) s.x = canvas.width;
         if (s.y > canvas.height) s.y = 0;
@@ -530,6 +660,60 @@
       requestAnimationFrame(drawStars);
     }
     drawStars();
+
+    // --- Cosmofetch Terminal Logic ---
+    const terminalBody = document.getElementById('terminal-body');
+    const cmdInput = document.getElementById('cmd-input');
+    cmdInput.focus();
+    function showOutput(str, isCosmo) {
+      const out = document.createElement('div');
+      out.className = isCosmo ? 'terminal-output cosmofetch-block' : 'terminal-output';
+      out.innerHTML = str;
+      terminalBody.insertBefore(out, terminalBody.lastElementChild);
+      terminalBody.scrollTop = terminalBody.scrollHeight;
+    }
+    function showCosmofetch() {
+      Array.from(terminalBody.querySelectorAll('.cosmofetch-block')).forEach(e => e.remove());
+      const ascii = `
+<pre style="color:#FFD700;font-family:JetBrains Mono,monospace;">
+      .         .                              
+ .    |\\   *   /|    .        .     .    .   
+  \\   | \\  |  / |   /    *        +      .   
+   \\  |  \\ | /  |  /   .      .        .     
+    \\ |   \\|/   | /          .    *          
+     \\|    V    |/      .          .         
+     /           \\    .     *  .        +    
+    /  /\\     /\\  \\    .         .    .     
+   /  /  \\___/  \\  \\         .       .      
+  /__/           \\__\\  .   *       .     .  
+</pre>
+<span style="color:#ff64c2;font-weight:bold;">User</span>: <span style="color:#7dfaff;">fangxuee</span><br>
+<span style="color:#ff64c2;font-weight:bold;">OS</span>: <span style="color:#7dfaff;">CosmiCOS 1.0</span><br>
+<span style="color:#ff64c2;font-weight:bold;">Host</span>: <span style="color:#7dfaff;">github.io</span><br>
+<span style="color:#ff64c2;font-weight:bold;">Kernel</span>: <span style="color:#7dfaff;">Galactic-6.9.42</span><br>
+<span style="color:#ff64c2;font-weight:bold;">Uptime</span>: <span style="color:#7dfaff;">${Math.floor(Math.random()*100)+1}h ${Math.floor(Math.random()*60)}m</span><br>
+<span style="color:#ff64c2;font-weight:bold;">Packages</span>: <span style="color:#7dfaff;">42 (cosmic-pkg)</span><br>
+<span style="color:#ff64c2;font-weight:bold;">Shell</span>: <span style="color:#7dfaff;">/bin/fangxsh</span><br>
+<span style="color:#ff64c2;font-weight:bold;">Resolution</span>: <span style="color:#7dfaff;">${window.screen.width}x${window.screen.height}</span><br>
+<span style="color:#ff64c2;font-weight:bold;">Terminal</span>: <span style="color:#7dfaff;">mac-neon</span><br>
+<span style="color:#ff64c2;font-weight:bold;">Theme</span>: <span style="color:#7dfaff;">galactic-dark</span><br>
+<span style="color:#ff64c2;font-weight:bold;">GitHub</span>: <a href="https://github.com/fangxuee" target="_blank" style="color:#7dfaff;">fangxuee</a>
+`;
+      showOutput(ascii, true);
+    }
+    cmdInput.addEventListener('keydown', function(e) {
+      if (e.key === "Enter") {
+        const command = cmdInput.value.trim();
+        if (command === "cosmofetch") {
+          showCosmofetch();
+        } else if (command !== "") {
+          showOutput(`command not found: ${command}`);
+        }
+        cmdInput.value = "";
+        setTimeout(() => cmdInput.focus(), 20);
+      }
+    });
+    window.addEventListener("load", () => { setTimeout(()=>cmdInput.focus(), 300); });
   </script>
 </body>
 </html>
